@@ -28,13 +28,16 @@ jobs:
       - name: Run tests
         run: pytest
 
-  # 2️⃣ Build & Push Docker image (only if tests pass)
+  # 2️⃣ Build & Push Docker image (multi-arch)
   build-and-publish:
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -45,15 +48,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image (multi-platform)
         id: docker_build
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./Dockerfile   # ✅ Ensure this matches your actual file name
+          file: ./Dockerfile   # ✅ Ensure the correct name
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKER_USERNAME }}/flasktest-app:latest
 
       - name: Image digest
-        run: "echo Docker image digest: ${{ steps.docker_build.outputs.digest }}"
+        run: echo  "Docker image digest: ${{ steps.docker_build.outputs.digest }}"
