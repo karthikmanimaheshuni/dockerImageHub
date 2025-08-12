@@ -50,10 +50,10 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./DockerFile   # ✅ Ensure correct case (Dockerfile not DockerFile)
+          file: ./Dockerfile   # ✅ matches your actual filename
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ${{ secrets.DOCKER_USERNAME }}/flasktest-app:latest
 
       - name: Image digest
-        run: echo "Docker image digest: ${{ steps.docker_build.outputs.digest }}"
+        run: 'echo "Docker image digest: ${{ steps.docker_build.outputs.digest }}"'
