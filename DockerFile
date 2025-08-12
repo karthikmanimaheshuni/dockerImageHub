@@ -1,0 +1,14 @@
+### use official python image from docker hub 
+FROM python:3.9-slim
+
+## set the working directory 
+WORKDIR /app
+
+## copy the current dir. contents into the container /app
+COPY . /app
+
+RUN pip3 install flask
+
+EXPOSE 5050
+
+CMD [ "python3","app.py" ]
